@@ -7,22 +7,23 @@ const projects = [
   {
     id: 'citeguard',
     number: '01',
-    type: 'Personal project / In progress',
-    title: 'CiteGuard: an eval-driven RAG support agent.',
-    summary: "I'm turning the evaluation and reliability practices I learned in banking into a transparent support-agent prototype - every answer carries citations, and every release carries evaluation numbers.",
+    type: 'Personal project / Public repository',
+    title: 'Fieldnotes: a citation-first RAG research console.',
+    summary: 'I built a local research console that ingests documents, retrieves relevant passages, and produces answers with citations and exportable reports.',
     outcome: 'RAG',
-    outcomeLabel: 'prototype in progress',
-    details: ['FastAPI + LangGraph prototype', 'Citation-aware answers by design', 'Evaluation-led development'],
-    responsibilities: ['I built the FastAPI and LangGraph prototype with citation-aware answers', 'I defined a golden dataset and repeatable evaluation flow', 'I track answer faithfulness, citation quality, and cost per query'],
-    role: 'Personal project · in progress',
-    period: 'Roadmap · 2026',
-    metricNote: 'Evaluation results will be published with the reproducible public release.',
-    evidence: ['Built: FastAPI + LangGraph prototype with citation-aware answers', 'Method: golden dataset and evaluation harness for faithfulness, citation quality, and cost', 'Next: public repository and live demo'],
+    outcomeLabel: 'public repository',
+    details: ['FastAPI + React/Vite console', 'Citation-backed document retrieval', 'Automated tests and report export'],
+    responsibilities: ['I built the FastAPI and React/Vite research console', 'I implemented document ingestion and persisted TF-IDF retrieval', 'I added citation-backed answers, Markdown reports, and automated tests'],
+    role: 'Personal project · public on GitHub',
+    period: '2026',
+    metricNote: 'The repository includes local setup instructions and automated tests.',
+    evidence: ['Built: document ingestion, retrieval, cited answers, activity review, and Markdown export', 'Method: persisted scikit-learn TF-IDF index with FastAPI endpoints and pytest coverage', 'Code: public GitHub repository; local demo instructions are in the README'],
     architecture: ['Question', 'Retriever', 'Agent + citations', 'Evaluation record'],
     architectureNote: 'Personal project architecture; no employer data or confidential systems.',
-    stack: 'FastAPI · LangGraph · pgvector · LiteLLM · Playwright',
+    stack: 'FastAPI · React · Vite · scikit-learn · pytest · Anthropic',
     accent: 'lime',
     openSource: true,
+    repoUrl: 'https://github.com/anushadagar1407/fieldnotes-rag-research-agent',
   },
   {
     id: 'covenant',
@@ -107,7 +108,7 @@ function ArchitectureFlow({ project }) {
   return (
     <div className="architecture-evidence">
       <div className="architecture-heading"><span>ARCHITECTURE</span><small>{project.architectureNote}</small></div>
-      <ol className="architecture-flow" aria-label={`${project.title} sanitized architecture flow`}>
+      <ol className="architecture-flow" aria-label={`${project.title} architecture flow`}>
         {project.architecture.map((step, index) => (
           <li key={step}><span>{String(index + 1).padStart(2, '0')}</span><strong>{step}</strong>{index < project.architecture.length - 1 && <ArrowUpRight size={15} aria-hidden="true" />}</li>
         ))}
@@ -139,6 +140,7 @@ function App() {
 
   return (
     <div className="site-shell">
+      <a className="skip-link" href="#top">Skip to content</a>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="Anusha Dagar home"><span className="brand-mark">AD</span><span>ANUSHA DAGAR</span></a>
         <button className="menu-toggle" onClick={() => setNavOpen(!navOpen)} aria-label={navOpen ? 'Close navigation' : 'Open navigation'}>
@@ -158,7 +160,7 @@ function App() {
         <section className="hero section-pad">
           <div className="hero-copy">
             <div className="availability"><span className="live-dot" /> Vancouver, BC · available for full-time roles</div>
-            <h1>Software Engineer building reliable backend and applied AI systems for banking.</h1>
+            <h1>Applied AI &amp; Software Engineer building reliable backend systems for banking.</h1>
             <p className="hero-lede"><em>Software that earns trust.</em> I’m Anusha, translating complex banking workflows into reliable, human-ready systems.</p>
             <div className="hero-actions">
               <a className="button button-primary" href="#work">Explore selected work <ArrowUpRight size={17} /></a>
@@ -198,7 +200,7 @@ function App() {
               <div className="detail-responsibilities"><span>MY CONTRIBUTION</span><ol>{selected.responsibilities.map((item) => <li key={item}>{item}</li>)}</ol></div>
               <div className="detail-evidence"><span>MY EVIDENCE & METHOD</span><ul>{selected.evidence.map((item) => <li key={item}>{item}</li>)}</ul></div>
               <ArchitectureFlow project={selected} />
-              {selected.openSource && <a className="project-proof-link" href="https://github.com/anushadagar1407" target="_blank" rel="noreferrer">View my GitHub profile <ArrowUpRight size={15} /></a>}
+              {selected.openSource && <div className="project-links"><a className="project-proof-link" href={selected.repoUrl} target="_blank" rel="noreferrer">View project code <ArrowUpRight size={15} /></a><span className="project-link-note">Run the demo locally using the repository README.</span></div>}
               <div className="stack-line"><span>STACK</span>{selected.stack}</div>
             </article>
           </div>
@@ -216,11 +218,11 @@ function App() {
         <section id="experience" className="experience-section section-pad">
           <div className="section-intro"><span className="section-index">03 / EXPERIENCE</span><h2>Banking was my systems education.</h2><p>These roles show the scope of work I took on and the problems I helped solve.</p></div>
           <div className="timeline">
-            <div className="timeline-item"><span>Jul—Aug 2026</span><div><strong>Deutsche Bank</strong><p>Associate Engineer, Commercial Banking Onboarding · Berlin</p><p className="timeline-note">I moved into commercial banking onboarding systems after my thesis internship.</p><ul><li>I shipped secure Java/Spring Boot REST APIs for workflow automation and validation.</li><li>I owned release-readiness checks using SQL analysis, application logs, tests, reviews, and CI/CD.</li></ul></div></div>
-            <div className="timeline-item"><span>Feb—Jul 2026</span><div><strong>Deutsche Bank</strong><p>Software Engineer Intern, Master’s Thesis — AI Agent Evaluation · Berlin</p><ul><li>I built process-aware LLM-agent evaluation tooling across 230+ evaluated runs, reaching 93.6% breach-detection accuracy.</li><li>I designed structured workflow tracking and audit trails and uncovered an 18% process-versus-outcome gap through reliability analysis.</li></ul></div></div>
-            <div className="timeline-item"><span>Apr—Sep 2025</span><div><strong>Deutsche Bank</strong><p>Software Engineer Intern, Corporate Bank Liquidity Dashboard · Berlin</p><ul><li>I delivered React and backend API features for corporate-bank users with 95% automated regression coverage across 20 Playwright suites.</li><li>I added Allure reporting and CI feedback, reducing manual QA effort by 50%.</li></ul></div></div>
-            <div className="timeline-item"><span>Jul 2023—Aug 2024</span><div><strong>Airtel Payments Bank</strong><p>Software Development Engineer, Assistant Manager — Technology · Gurgaon</p><ul><li>I developed Spring Boot, SQL, and React Native digital-banking onboarding flows.</li><li>I reduced customer-journey lead time by 20% and increased onboarding engagement by 30%.</li></ul></div></div>
-            <div className="timeline-item"><span>May—Jul 2022</span><div><strong>Citi India</strong><p>Software Analyst Intern, Commodities Technology · Pune</p><ul><li>I used Python, MongoDB/SQL, and Swagger tooling to streamline configuration processing.</li><li>I reduced processing time by 15%.</li></ul></div></div>
+            <div className="timeline-item"><span>Jul — Aug 2026</span><div><strong>Deutsche Bank</strong><p>Associate Engineer, Commercial Banking Onboarding · Berlin</p><p className="timeline-note">I moved into commercial banking onboarding systems after my thesis internship.</p><ul><li>I shipped secure Java/Spring Boot REST APIs for workflow automation and validation.</li><li>I owned release-readiness checks using SQL analysis, application logs, tests, reviews, and CI/CD.</li></ul></div></div>
+            <div className="timeline-item"><span>Feb — Jul 2026</span><div><strong>Deutsche Bank</strong><p>Software Engineer Intern, Master’s Thesis — AI Agent Evaluation · Berlin</p><ul><li>I built process-aware LLM-agent evaluation tooling across 230+ evaluated runs, reaching 93.6% breach-detection accuracy.</li><li>I designed structured workflow tracking and audit trails and uncovered an 18% process-versus-outcome gap through reliability analysis.</li></ul></div></div>
+            <div className="timeline-item"><span>Apr — Sep 2025</span><div><strong>Deutsche Bank</strong><p>Software Engineer Intern, Corporate Bank Liquidity Dashboard · Berlin</p><ul><li>I delivered React and backend API features for corporate-bank users with 95% automated regression coverage across 20 Playwright suites.</li><li>I added Allure reporting and CI feedback, reducing manual QA effort by 50%.</li></ul></div></div>
+            <div className="timeline-item"><span>Jul 2023 — Aug 2024</span><div><strong>Airtel Payments Bank</strong><p>Software Development Engineer, Assistant Manager — Technology · Gurgaon</p><ul><li>I developed Spring Boot, SQL, and React Native digital-banking onboarding flows.</li><li>I reduced customer-journey lead time by 20% and increased onboarding engagement by 30%.</li></ul></div></div>
+            <div className="timeline-item"><span>May — Jul 2022</span><div><strong>Citi India</strong><p>Software Analyst Intern, Commodities Technology · Pune</p><ul><li>I used Python, MongoDB/SQL, and Swagger tooling to streamline configuration processing.</li><li>I reduced processing time by 15%.</li></ul></div></div>
           </div>
         </section>
 

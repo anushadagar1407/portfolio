@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>AD</title>
+  <rect width="64" height="64" fill="#152329" />
+  <rect x="9" y="9" width="46" height="46" fill="none" stroke="#9de4e8" stroke-width="2" />
+  <text x="32" y="39" text-anchor="middle" fill="#f7f5ef" font-family="Arial, sans-serif" font-size="20" font-weight="700">AD</text>
+</svg>
