@@ -5,7 +5,7 @@ import './styles.css'
 
 const projects = [
   {
-    id: 'citeguard',
+    id: 'fieldnotes',
     number: '01',
     type: 'Personal project / Public repository',
     title: 'Fieldnotes: a citation-first RAG research console.',
@@ -24,6 +24,11 @@ const projects = [
     accent: 'lime',
     openSource: true,
     repoUrl: 'https://github.com/anushadagar1407/fieldnotes-rag-research-agent',
+    proofLinks: [
+      { href: 'https://github.com/anushadagar1407/fieldnotes-rag-research-agent/blob/main/README.md', label: 'Verification notes' },
+      { href: 'https://github.com/anushadagar1407/fieldnotes-rag-research-agent/blob/main/docs/architecture.svg', label: 'Architecture' },
+      { href: 'https://github.com/anushadagar1407/fieldnotes-rag-research-agent/blob/main/docs/fieldnotes-research.png', label: 'App screenshot' },
+    ],
   },
   {
     id: 'covenant',
@@ -200,7 +205,7 @@ function App() {
               <div className="detail-responsibilities"><span>MY CONTRIBUTION</span><ol>{selected.responsibilities.map((item) => <li key={item}>{item}</li>)}</ol></div>
               <div className="detail-evidence"><span>MY EVIDENCE & METHOD</span><ul>{selected.evidence.map((item) => <li key={item}>{item}</li>)}</ul></div>
               <ArchitectureFlow project={selected} />
-              {selected.openSource && <div className="project-links"><a className="project-proof-link" href={selected.repoUrl} target="_blank" rel="noreferrer">View project code <ArrowUpRight size={15} /></a><span className="project-link-note">Run the demo locally using the repository README.</span></div>}
+              {selected.openSource && <div className="project-links"><a className="project-proof-link" href={selected.repoUrl} target="_blank" rel="noreferrer">View project code <ArrowUpRight size={15} /></a>{selected.proofLinks?.map((link) => <a className="project-proof-link" key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={15} /></a>)}<span className="project-link-note">Run the demo locally using the repository README.</span></div>}
               <div className="stack-line"><span>STACK</span>{selected.stack}</div>
             </article>
           </div>
