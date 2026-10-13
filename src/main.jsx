@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ArrowLeft, ArrowUpRight, Check, Copy, MapPin, Menu, Send, X } from 'lucide-react'
+import { ArrowDown, ArrowLeft, ArrowUpRight, Check, Copy, Download, MapPin, Menu, Send, X } from 'lucide-react'
 import './styles.css'
 
 const PLAUSIBLE_DOMAIN = 'anusha-dagar-portfolio.anusha-dagar-portfolio.workers.dev'
@@ -101,7 +101,7 @@ const projects = [
     architecture: ['React dashboard', 'Backend APIs', 'Data views', 'Playwright + Allure'],
     architectureNote: 'User and banking data are represented as generic data views.',
     stack: 'React · API integration · Playwright · Allure · CI/CD',
-    accent: 'lime',
+    accent: 'sky',
   },
 ]
 
@@ -120,7 +120,7 @@ const experience = [
     ],
   },
   {
-    period: 'Jul — Aug 2026',
+    period: 'Jul 2026 — Aug 2026',
     company: 'Deutsche Bank',
     title: 'Associate Engineer · Commercial Banking Onboarding',
     location: 'Berlin',
@@ -131,7 +131,7 @@ const experience = [
     ],
   },
   {
-    period: 'Feb — Jul 2026',
+    period: 'Feb 2026 — Jul 2026',
     company: 'Deutsche Bank',
     title: 'Software Engineer Intern · Master’s Thesis — AI Agent Evaluation',
     location: 'Berlin',
@@ -141,7 +141,7 @@ const experience = [
     ],
   },
   {
-    period: 'Apr — Sep 2025',
+    period: 'Apr 2025 — Sep 2025',
     company: 'Deutsche Bank',
     title: 'Software Engineer Intern · Corporate Bank Liquidity Dashboard',
     location: 'Berlin',
@@ -161,7 +161,7 @@ const experience = [
     ],
   },
   {
-    period: 'May — Jul 2022',
+    period: 'May 2022 — Jul 2022',
     company: 'Citi India',
     title: 'Software Analyst Intern · Commodities Technology',
     location: 'Pune',
@@ -180,15 +180,10 @@ const chatWelcome = 'Hi, I’m the guide to this portfolio. Ask me about Anusha�
 
 const chatSuggestions = [
   'What has Anusha built?',
-  'Where has she worked?',
-  'What are her strongest skills?',
-  'Is she available full-time?',
-  'How do I contact her?',
   'Tell me about her banking work',
   'What did she study?',
-  'Is she in Vancouver?',
-  'Show the public RAG project',
-  'Why would a team hire her?',
+  'Is she available full-time?',
+  'How do I contact her?',
 ]
 
 const chatKnowledge = [
@@ -318,8 +313,8 @@ function Hero({ onCopyEmail, copied }) {
         <h1>Software engineer who makes complex systems legible.</h1>
         <p className="hero-lede"><em>Software that earns trust.</em> I’m Anusha — I build reliable backend and applied-AI systems for high-stakes workflows, from banking APIs to LLM-agent evaluation.</p>
         <div className="hero-actions">
-          <a className="button button-primary" href="#work">Explore selected work <ArrowUpRight size={17} /></a>
-          <a className="button button-quiet" href="/Anusha_Dagar_Resume.pdf" download>Download résumé <ArrowUpRight size={17} /></a>
+          <a className="button button-primary" href="#work">Explore selected work <ArrowDown size={17} /></a>
+          <a className="button button-quiet" href="/Anusha_Dagar_Resume.pdf" download>Download résumé <Download size={17} /></a>
           <button className="button button-quiet" onClick={onCopyEmail}>{copied ? <><Check size={15} /> Email copied</> : <>Copy my email <Copy size={15} /></>}</button>
         </div>
         <div className="hero-metrics" aria-label="Selected results">
@@ -550,7 +545,6 @@ function ContactSection({ onCopyEmail, copied }) {
           <label><span>Email</span><input name="email" type="email" autoComplete="email" required /></label>
           <label><span>Message</span><textarea name="message" rows="4" required /></label>
           <button className="button button-primary" type="submit">Send enquiry <ArrowUpRight size={16} /></button>
-          <p className="contact-form-note">Opens your mail client until a Formspree endpoint is configured.</p>
           {formStatus && <p className="contact-form-status" role="status">{formStatus}</p>}
         </form>
       </div>
@@ -563,6 +557,7 @@ function Footer() {
     <footer className="footer">
       <span>© 2026 Anusha Dagar</span>
       <span>Designed and built by me in Vancouver <MapPin size={14} /></span>
+      <span className="footer-links"><a href="https://www.linkedin.com/in/anusha-dagar-82834619a/" target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={13} /></a><a href="https://github.com/anushadagar1407" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={13} /></a></span>
       <a href="#top">Back to top ↑</a>
     </footer>
   )
@@ -580,7 +575,12 @@ function ChatBot() {
   const scrollRef = useRef(null)
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
+    if (!scrollRef.current) return
+    if (open && messages.length === 1 && !typing) {
+      scrollRef.current.scrollTo({ top: 0, behavior: 'auto' })
+      return
+    }
+    scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [messages, typing, open])
 
   useEffect(() => {
