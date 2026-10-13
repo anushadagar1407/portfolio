@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { ArrowLeft, ArrowUpRight, Check, Copy, MapPin, Menu, Send, X } from 'lucide-react'
 import './styles.css'
 
-const PLAUSIBLE_DOMAIN = 'REPLACE_WITH_PLAUSIBLE_DOMAIN'
+const PLAUSIBLE_DOMAIN = 'anusha-dagar-portfolio.anusha-dagar-portfolio.workers.dev'
 const FORMSPREE_ENDPOINT = 'REPLACE_WITH_FORMSPREE_ENDPOINT'
 const CONTACT_EMAIL = 'dagaranusha@gmail.com'
 
