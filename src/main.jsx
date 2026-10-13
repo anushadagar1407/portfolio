@@ -99,6 +99,29 @@ const projects = [
     stack: 'React · API integration · Playwright · Allure · CI/CD',
     accent: 'lime',
   },
+  {
+    id: 'future-public-project',
+    number: '05',
+    type: 'Public project placeholder',
+    org: '[PLACEHOLDER]',
+    year: '[PLACEHOLDER]',
+    title: '[PLACEHOLDER] A future public project ready to add.',
+    summary: '[PLACEHOLDER] Add the user problem, your contribution, and a measurable outcome here.',
+    outcome: 'NEXT',
+    outcomeLabel: 'project slot to fill',
+    metricNote: '[PLACEHOLDER] Add one verified metric or outcome.',
+    details: ['[PLACEHOLDER] User or customer outcome', '[PLACEHOLDER] Scope and contribution', '[PLACEHOLDER] Evidence or launch detail'],
+    responsibilities: ['[PLACEHOLDER] What you designed or built', '[PLACEHOLDER] Key technical decision', '[PLACEHOLDER] Result, learning, or next step'],
+    role: '[PLACEHOLDER] Role / contribution',
+    period: '[PLACEHOLDER] Dates',
+    evidence: ['[PLACEHOLDER] Public proof link or release note', '[PLACEHOLDER] Method, test, or implementation detail', '[PLACEHOLDER] What a reviewer can verify'],
+    architecture: ['Problem', 'System', 'Evidence', 'Outcome'],
+    architectureNote: 'Placeholder architecture; replace every field when the public project is ready.',
+    stack: '[PLACEHOLDER] Stack / tools',
+    accent: 'aqua',
+    placeholder: true,
+    placeholderLinks: ['GitHub URL [PLACEHOLDER]', 'Live project URL [PLACEHOLDER]'],
+  },
 ]
 
 const experience = [
@@ -168,6 +191,11 @@ const experience = [
   },
 ]
 
+const testimonials = [
+  { quote: '[PLACEHOLDER] Add a short quote about Anusha\'s engineering judgement, collaboration, or delivery.', name: '[PLACEHOLDER NAME]', role: '[PLACEHOLDER ROLE / COMPANY]' },
+  { quote: '[PLACEHOLDER] Add a second quote that shows how Anusha works with teams or stakeholders.', name: '[PLACEHOLDER NAME]', role: '[PLACEHOLDER ROLE / COMPANY]' },
+]
+
 /* ------------------------------------------------------------------ */
 /*  Chatbot knowledge (rule-based, offline)                            */
 /* ------------------------------------------------------------------ */
@@ -222,6 +250,12 @@ function LionIcon({ size = 26 }) {
   )
 }
 
+function Headshot() {
+  const [failed, setFailed] = useState(false)
+  if (failed) return <div className="headshot-fallback" role="img" aria-label="Headshot placeholder"><strong>AD</strong><span>Photo placeholder</span></div>
+  return <img className="headshot" src="/headshot.jpg" alt="Anusha Dagar" onError={() => setFailed(true)} />
+}
+
 /* ------------------------------------------------------------------ */
 /*  Architecture map (hero visual)                                      */
 /* ------------------------------------------------------------------ */
@@ -229,6 +263,7 @@ function LionIcon({ size = 26 }) {
 function ArchitectureMap() {
   return (
     <div className="map" aria-label="Architecture map showing data, services, evaluation, and human outcomes">
+      <div className="hero-headshot"><Headshot /></div>
       <div className="map-grid" />
       <svg className="map-lines" viewBox="0 0 560 440" aria-hidden="true">
         <path d="M82 94 C160 94 150 214 270 214" />
@@ -296,10 +331,10 @@ function Hero({ onCopyEmail, copied }) {
           <button className="button button-quiet" onClick={onCopyEmail}>{copied ? <><Check size={15} /> Email copied</> : <>Copy my email <Copy size={15} /></>}</button>
         </div>
         <div className="hero-metrics" aria-label="Selected results">
-          <div><strong>93.6%</strong><span>breach detection<small>230+ evaluated agent runs</small></span></div>
-          <div><strong>95%</strong><span>test coverage<small>20 Playwright suites</small></span></div>
-          <div><strong>50%</strong><span>less manual QA<small>after regression automation</small></span></div>
-          <div><strong>20%</strong><span>shorter lead time<small>customer onboarding journey</small></span></div>
+          <div><strong>93.6%</strong><span>loan-covenant breach detection<small>230+ evaluated agent runs</small></span></div>
+          <div><strong>95%</strong><span>automated test coverage<small>20 Playwright suites</small></span></div>
+          <div><strong>50% less</strong><span>manual QA effort<small>after regression automation</small></span></div>
+          <div><strong>20% shorter</strong><span>customer lead time<small>onboarding journey</small></span></div>
         </div>
         <div className="hero-meta">
           <div><span>FOCUS</span><strong>Applied AI · Backend · Full-stack</strong></div>
@@ -350,6 +385,9 @@ function ProjectDetail({ project, onClose }) {
             {project.proofLinks?.map((link) => <a className="project-proof-link" key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={15} /></a>)}
             <span className="project-link-note">Run the demo locally using the repository README.</span>
           </div>
+        )}
+        {project.placeholder && (
+          <div className="project-links placeholder-links"><span className="project-link-note">PLACEHOLDER LINKS TO ADD</span>{project.placeholderLinks.map((link) => <span className="project-proof-link placeholder-link" key={link}>{link} <ArrowUpRight size={15} /></span>)}</div>
         )}
         <div className="stack-line"><span>STACK</span>{project.stack}</div>
         <button className="panel-back" onClick={onClose}><ArrowLeft size={15} /> Back to selected work</button>
@@ -424,11 +462,32 @@ function ExperienceSection() {
   )
 }
 
+function TestimonialsSection() {
+  return (
+    <section id="testimonials" className="testimonials-section section-pad">
+      <div className="section-intro">
+        <span className="section-index">04 / TESTIMONIALS</span>
+        <h2>What collaborators might say.</h2>
+        <p>Two clearly marked placeholders for future recommendations from managers, peers, or partners.</p>
+      </div>
+      <div className="testimonial-grid">
+        {testimonials.map((testimonial, index) => (
+          <article className="testimonial-card" key={`testimonial-${index}`}>
+            <span className="testimonial-mark">&quot;</span>
+            <blockquote>{testimonial.quote}</blockquote>
+            <div className="testimonial-attribution"><strong>{testimonial.name}</strong><span>{testimonial.role}</span></div>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 function AboutSection() {
   return (
     <section id="background" className="about-section section-pad">
       <div id="about" className="about-copy">
-        <span className="section-index">04 / BACKGROUND</span>
+        <span className="section-index">05 / BACKGROUND</span>
         <h2>A little about me.</h2>
         <p>From New Delhi to Berlin to Vancouver, I’ve spent 2+ years where software meets high-stakes workflows. I bring a technical foundation, a business-school lens, and a habit of writing things down clearly.</p>
         <ul className="about-points">
@@ -463,7 +522,7 @@ function ToolkitSection() {
   return (
     <section className="toolkit-section section-pad">
       <div className="toolkit-heading">
-        <span className="section-index">05 / TOOLKIT</span>
+        <span className="section-index">06 / TOOLKIT</span>
         <h2>My toolkit.</h2>
         <p className="toolkit-lede">The tools I have used across production banking, applied AI research, and day-to-day delivery.</p>
       </div>
@@ -481,11 +540,12 @@ function ContactSection({ onCopyEmail, copied }) {
   return (
     <section id="contact" className="contact-section section-pad">
       <div>
-        <span className="section-index">06 / CONTACT</span>
+        <span className="section-index">07 / CONTACT</span>
         <h2>Let’s work on a hard problem<br /><em>and make it clear.</em></h2>
       </div>
       <div className="contact-cta">
         <p>I’m a Canadian Permanent Resident in Vancouver, actively looking for a full-time permanent software engineering role. If you’re hiring, I’d love to talk.</p>
+        <p className="contact-warmth">If you’re in Vancouver, I’d be glad to continue the conversation over coffee.</p>
         <a className="email-link" href="mailto:dagaranusha@gmail.com">dagaranusha@gmail.com <ArrowUpRight size={20} /></a>
         <button className="copy-button" onClick={onCopyEmail}>{copied ? <><Check size={15} /> Copied</> : <><Copy size={15} /> Copy email</>}</button>
       </div>
@@ -607,6 +667,7 @@ function App() {
         <WorkSection />
         <ApproachSection />
         <ExperienceSection />
+        <TestimonialsSection />
         <AboutSection />
         <ToolkitSection />
         <ContactSection onCopyEmail={copyEmail} copied={copied} />
