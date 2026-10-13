@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client'
 import { ArrowLeft, ArrowUpRight, Check, Copy, MapPin, Menu, Send, X } from 'lucide-react'
 import './styles.css'
 
+const PLAUSIBLE_DOMAIN = 'REPLACE_WITH_PLAUSIBLE_DOMAIN'
+const FORMSPREE_ENDPOINT = 'REPLACE_WITH_FORMSPREE_ENDPOINT'
+const CONTACT_EMAIL = 'dagaranusha@gmail.com'
+
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
@@ -208,28 +212,44 @@ const chatSuggestions = [
   'What are her strongest skills?',
   'Is she available full-time?',
   'How do I contact her?',
+  'Tell me about her banking work',
+  'What did she study?',
+  'Is she in Vancouver?',
+  'Show the public RAG project',
+  'Why would a team hire her?',
 ]
 
-const chatRules = [
-  { keys: ['hello', 'hi', 'hey', 'namaste', 'good morning', 'good afternoon', 'good evening'], reply: 'Hello! I can tell you about Anusha’s background, her projects, her skills, and how to get in touch. What would you like to know?' },
-  { keys: ['trans bc', 'freightways', 'current', 'now', 'present'], reply: 'Anusha is currently a Senior Software Development Engineer (independent contractor) at Trans BC Freightways Ltd in Surrey, BC, where she owns the entire IT function — infrastructure, systems, website, data, security, and vendors — and builds across Java/Spring Boot, Python/FastAPI, React/TypeScript, and PostgreSQL/MySQL with CI/CD.' },
-  { keys: ['built', 'project', 'fieldnotes', 'rag'], reply: 'Her flagship personal project is Fieldnotes — a citation-first RAG research console (FastAPI + React/Vite) that ingests documents, retrieves passages with citations, and exports Markdown reports. It’s public on GitHub with automated tests and setup instructions. At Deutsche Bank she built an AI-agent evaluation platform reaching 93.6% breach-detection accuracy across 230+ runs, production Spring Boot onboarding APIs, and a liquidity dashboard with 95% Playwright regression coverage.' },
-  { keys: ['experience', 'worked', 'work history', 'career', 'job', 'deutsche', 'airtel', 'citi', 'bank'], reply: 'Anusha has 2+ years across banking technology: Trans BC Freightways (current, Senior SDE owning all of IT), Deutsche Bank Berlin (Associate Engineer and two internships — AI agent evaluation, commercial banking onboarding, liquidity dashboard), Airtel Payments Bank (SDE, digital-banking onboarding), and Citi India (intern, commodities technology). Scroll to Experience for the full timeline.' },
-  { keys: ['skill', 'stack', 'tech', 'language', 'strongest', 'tool'], reply: 'Her core stack: Python, Java, JavaScript, TypeScript, SQL; FastAPI, Spring Boot, React, Next.js, REST APIs; AI systems — RAG, LLM evaluation, LangGraph, pgvector, Google ADK, LiteLLM, Ollama; delivery — pytest, Playwright, Jenkins, GitHub Actions, Agile/Scrum.' },
-  { keys: ['education', 'degree', 'university', 'study', 'master', 'm.sc', 'msc', 'b.tech', 'btech'], reply: 'She holds an M.Sc. in Analytics & AI from ESMT Berlin (2024–2026, grade 1.7 — roughly A− with distinction) and a B.Tech. in Electronics & Communication from IGDTUW, New Delhi (2019–2023, CGPA 7.95/10). She was also class representative and co-president of the Tech & Innovation Club at ESMT.' },
-  { keys: ['available', 'full-time', 'full time', 'hire', 'hiring', 'open', 'opportunit', 'vancouver', 'relocate', 'visa', 'work permit', 'resident'], reply: 'Yes — Anusha is a Canadian Permanent Resident based in Vancouver, BC, and is actively seeking a full-time permanent software engineering role in Vancouver. No sponsorship needed.' },
-  { keys: ['contact', 'email', 'reach', 'talk', 'call', 'phone', 'linkedin', 'github', 'resume', 'cv'], reply: 'You can reach her at dagaranusha@gmail.com — there’s a copy button in the Contact section. She’s also on LinkedIn and GitHub (links in the nav and About sections), and her résumé is downloadable from the hero.' },
-  { keys: ['salary', 'pay', 'compensation', 'ctc'], reply: 'Compensation is best discussed directly with Anusha — drop her a line at dagaranusha@gmail.com.' },
-  { keys: ['thank', 'thanks', 'great', 'awesome', 'nice'], reply: 'You’re welcome! Anything else you’d like to know — her projects, her experience, or how to reach her?' },
-  { keys: ['who', 'about', 'anusha', 'background', 'introduce'], reply: 'Anusha Dagar is an Applied AI & Software Engineer in Vancouver, BC. She builds reliable backend and applied-AI systems — from banking APIs and onboarding workflows to LLM-agent evaluation platforms. She’s known for making complex systems legible: tested, observable, and well documented.' },
-  { keys: ['where', 'location', 'based', 'live'], reply: 'Anusha is based in Vancouver, British Columbia, Canada — and open to full-time roles in the city.' },
+const chatKnowledge = [
+  { terms: ['hello', 'hi', 'hey', 'namaste', 'good morning', 'good afternoon', 'good evening'], reply: 'Hello! I can tell you about Anusha’s background, her projects, her skills, and how to get in touch. What would you like to know?' },
+  { terms: ['trans bc', 'freightways', 'current role', 'where does she work now', 'now', 'present', 'contractor'], reply: 'Anusha is currently a Senior Software Development Engineer (independent contractor) at Trans BC Freightways Ltd in Surrey, BC, where she owns the entire IT function — infrastructure, systems, website, data, security, and vendors — and builds across Java/Spring Boot, Python/FastAPI, React/TypeScript, and PostgreSQL/MySQL with CI/CD.' },
+  { terms: ['built', 'project', 'fieldnotes', 'rag', 'public project', 'research console', 'documents', 'what has she made'], reply: 'Her flagship personal project is Fieldnotes — a citation-first RAG research console (FastAPI + React/Vite) that ingests documents, retrieves passages with citations, and exports Markdown reports. It’s public on GitHub with automated tests and setup instructions. At Deutsche Bank she built an AI-agent evaluation platform reaching 93.6% breach-detection accuracy across 230+ runs, production Spring Boot onboarding APIs, and a liquidity dashboard with 95% Playwright regression coverage.' },
+  { terms: ['experience', 'worked', 'work history', 'career', 'job', 'banking work', 'bank', 'deutsche', 'airtel', 'citi', 'financial technology'], reply: 'Anusha has 2+ years across banking technology: Trans BC Freightways (current, Senior SDE owning all of IT), Deutsche Bank Berlin (Associate Engineer and two internships — AI agent evaluation, commercial banking onboarding, liquidity dashboard), Airtel Payments Bank (SDE, digital-banking onboarding), and Citi India (intern, commodities technology). Scroll to Experience for the full timeline.' },
+  { terms: ['skill', 'stack', 'tech', 'technology', 'language', 'strongest', 'tool', 'framework'], reply: 'Her core stack: Python, Java, JavaScript, TypeScript, SQL; FastAPI, Spring Boot, React, Next.js, REST APIs; AI systems — RAG, LLM evaluation, LangGraph, pgvector, Google ADK, LiteLLM, Ollama; delivery — pytest, Playwright, Jenkins, GitHub Actions, Agile/Scrum.' },
+  { terms: ['education', 'degree', 'university', 'study', 'studied', 'master', 'school', 'esmt', 'igdtuw', 'btech'], reply: 'She holds an M.Sc. in Analytics & AI from ESMT Berlin (2024–2026, grade 1.7 — roughly A− with distinction) and a B.Tech. in Electronics & Communication from IGDTUW, New Delhi (2019–2023, CGPA 7.95/10). She was also class representative and co-president of the Tech & Innovation Club at ESMT.' },
+  { terms: ['available', 'full-time', 'full time', 'hire', 'hiring', 'open', 'opportunity', 'vancouver', 'relocate', 'visa', 'work permit', 'resident', 'sponsorship'], reply: 'Yes — Anusha is a Canadian Permanent Resident based in Vancouver, BC, and is actively seeking a full-time permanent software engineering role in Vancouver. No sponsorship needed.' },
+  { terms: ['contact', 'email', 'reach', 'talk', 'call', 'phone', 'linkedin', 'github', 'resume', 'cv'], reply: 'You can reach her at dagaranusha@gmail.com — there’s a copy button and a contact form in the Contact section. She’s also on LinkedIn and GitHub, and her résumé is downloadable from the hero.' },
+  { terms: ['salary', 'pay', 'compensation', 'ctc'], reply: 'Compensation is best discussed directly with Anusha — drop her a line at dagaranusha@gmail.com.' },
+  { terms: ['thank', 'thanks', 'great', 'awesome', 'nice'], reply: 'You’re welcome! Anything else you’d like to know — her projects, her experience, or how to reach her?' },
+  { terms: ['who', 'about anusha', 'background', 'introduce', 'good fit', 'why hire', 'hire her'], reply: 'Anusha Dagar is an Applied AI & Software Engineer in Vancouver, BC. She builds reliable backend and applied-AI systems — from banking APIs and onboarding workflows to LLM-agent evaluation platforms. She’s known for making complex systems legible: tested, observable, and well documented.' },
+  { terms: ['where', 'location', 'based', 'live', 'in vancouver'], reply: 'Anusha is based in Vancouver, British Columbia, Canada — and open to full-time roles in the city.' },
 ]
+
+const normaliseChatText = (text) => text.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, ' ').replace(/\s+/g, ' ').trim()
 
 function chatReply(text) {
-  const t = text.toLowerCase()
-  for (const rule of chatRules) {
-    if (rule.keys.some((k) => t.includes(k))) return rule.reply
+  const query = normaliseChatText(text)
+  let best = null
+  let bestScore = 0
+  for (const entry of chatKnowledge) {
+    const score = entry.terms.reduce((total, term) => {
+      const phrase = normaliseChatText(term)
+      if (query.includes(phrase)) return total + phrase.split(' ').length + 1
+      const words = phrase.split(' ')
+      return total + (words.length > 1 && words.every((word) => query.includes(word)) ? 1 : 0)
+    }, 0)
+    if (score > bestScore) { best = entry; bestScore = score }
   }
+  if (best) return best.reply
   return 'Good question — the fullest answer lives on this page. Try the Work and Experience sections, or ask me about her projects, skills, education, availability, or how to contact her.'
 }
 
@@ -537,6 +557,35 @@ function ToolkitSection() {
 }
 
 function ContactSection({ onCopyEmail, copied }) {
+  const [formStatus, setFormStatus] = useState('')
+
+  const openMailClient = (name, email, message) => {
+    const subject = encodeURIComponent(`Portfolio enquiry from ${name}`)
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`
+  }
+
+  const submitContact = async (event) => {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    const name = String(data.get('name') || '').trim()
+    const email = String(data.get('email') || '').trim()
+    const message = String(data.get('message') || '').trim()
+    if (FORMSPREE_ENDPOINT.startsWith('REPLACE_')) {
+      openMailClient(name, email, message)
+      return
+    }
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, { method: 'POST', headers: { Accept: 'application/json' }, body: data })
+      if (!response.ok) throw new Error('Form submission failed')
+      setFormStatus('Thanks — your message has been sent.')
+      event.currentTarget.reset()
+    } catch {
+      setFormStatus('Opening your mail client instead…')
+      openMailClient(name, email, message)
+    }
+  }
+
   return (
     <section id="contact" className="contact-section section-pad">
       <div>
@@ -548,6 +597,14 @@ function ContactSection({ onCopyEmail, copied }) {
         <p className="contact-warmth">If you’re in Vancouver, I’d be glad to continue the conversation over coffee.</p>
         <a className="email-link" href="mailto:dagaranusha@gmail.com">dagaranusha@gmail.com <ArrowUpRight size={20} /></a>
         <button className="copy-button" onClick={onCopyEmail}>{copied ? <><Check size={15} /> Copied</> : <><Copy size={15} /> Copy email</>}</button>
+        <form className="contact-form" onSubmit={submitContact}>
+          <label><span>Name</span><input name="name" autoComplete="name" required /></label>
+          <label><span>Email</span><input name="email" type="email" autoComplete="email" required /></label>
+          <label><span>Message</span><textarea name="message" rows="4" required /></label>
+          <button className="button button-primary" type="submit">Send enquiry <ArrowUpRight size={16} /></button>
+          <p className="contact-form-note">Opens your mail client until a Formspree endpoint is configured.</p>
+          {formStatus && <p className="contact-form-status" role="status">{formStatus}</p>}
+        </form>
       </div>
     </section>
   )
@@ -578,6 +635,13 @@ function ChatBot() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [messages, typing, open])
 
+  useEffect(() => {
+    if (!open) return undefined
+    const onKeyDown = (event) => { if (event.key === 'Escape') setOpen(false) }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open])
+
   const send = (text) => {
     const clean = text.trim()
     if (!clean || typing) return
@@ -593,10 +657,10 @@ function ChatBot() {
   return (
     <div className="chatbot">
       {open && (
-        <div className="chat-panel" role="dialog" aria-label="Chat with Anusha's portfolio assistant">
+        <div className="chat-panel" role="dialog" aria-modal="true" aria-labelledby="chat-title">
           <div className="chat-header">
             <span className="chat-avatar"><LionIcon size={30} /></span>
-            <div><strong>Ask about Anusha</strong><small><span className="live-dot small" /> Always here · replies instantly</small></div>
+            <div><strong id="chat-title">Ask about Anusha</strong><small><span className="live-dot small" /> Always here · replies instantly</small></div>
             <button className="chat-restart" onClick={() => setMessages([{ role: 'bot', text: chatWelcome }])} aria-label="Start over" title="Start over">↺</button>
             <button className="chat-close" onClick={() => setOpen(false)} aria-label="Close chat"><X size={18} /></button>
           </div>
@@ -644,12 +708,25 @@ function ChatBot() {
   )
 }
 
+function usePrivacyFriendlyAnalytics() {
+  useEffect(() => {
+    if (PLAUSIBLE_DOMAIN.startsWith('REPLACE_')) return undefined
+    const script = document.createElement('script')
+    script.defer = true
+    script.dataset.domain = PLAUSIBLE_DOMAIN
+    script.src = 'https://plausible.io/js/script.js'
+    document.head.appendChild(script)
+    return () => script.remove()
+  }, [])
+}
+
 /* ------------------------------------------------------------------ */
 /*  App                                                                */
 /* ------------------------------------------------------------------ */
 
 function App() {
   const [copied, setCopied] = useState(false)
+  usePrivacyFriendlyAnalytics()
 
   const copyEmail = async () => {
     try { await navigator.clipboard?.writeText('dagaranusha@gmail.com') } catch { /* clipboard unavailable */ }
