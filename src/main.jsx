@@ -244,8 +244,8 @@ const experience = [
 const chatWelcome = 'Hi, I’m the guide to this portfolio. Ask about Anusha’s experience, projects, skills, or how to reach her. You can also use a suggestion below.'
 
 const chatSuggestions = [
-  'What has Anusha built?',
-  'Tell me about her banking work',
+  'What are her GitHub projects?',
+  'Where did Anusha work?',
   'What did she study?',
   'Is she available full-time?',
   'How do I contact her?',
@@ -698,16 +698,26 @@ function ChatBot() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [open])
 
-  const send = (text) => {
+  const send = async (text) => {
     const clean = text.trim()
     if (!clean || typing) return
     setMessages((prev) => [...prev, { role: 'user', text: clean }])
     setInput('')
     setTyping(true)
-    window.setTimeout(() => {
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 7000)
+    try {
+      const response = await fetch('/api/chat', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ message: clean }), signal: controller.signal })
+      if (!response.ok) throw new Error('Chat route failed')
+      const result = await response.json()
+      if (typeof result.reply !== 'string' || !result.reply.trim()) throw new Error('Empty chat reply')
+      setMessages((prev) => [...prev, { role: 'bot', text: result.reply.trim() }])
+    } catch {
       setMessages((prev) => [...prev, { role: 'bot', text: chatReply(clean) }])
+    } finally {
+      window.clearTimeout(timeout)
       setTyping(false)
-    }, 650)
+    }
   }
 
   return (
