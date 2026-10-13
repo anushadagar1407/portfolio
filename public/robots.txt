@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://anusha-dagar-portfolio.anusha-dagar-portfolio.workers.dev/sitemap.xml

@@ -1,11 +1,76 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ArrowDown, ArrowLeft, ArrowUpRight, Check, Copy, Download, MapPin, Menu, Send, X } from 'lucide-react'
+import { ArrowDown, ArrowLeft, ArrowUpRight, Check, Copy, Download, MapPin, Menu, Moon, Send, Sun, X } from 'lucide-react'
 import './styles.css'
 
 const PLAUSIBLE_DOMAIN = 'anusha-dagar-portfolio.anusha-dagar-portfolio.workers.dev'
 const FORMSPREE_ENDPOINT = 'REPLACE_WITH_FORMSPREE_ENDPOINT'
 const CONTACT_EMAIL = 'dagaranusha@gmail.com'
+
+function useReveal() {
+  const ref = useRef(null)
+  useEffect(() => {
+    const element = ref.current
+    if (!element) return undefined
+    element.classList.add('reveal-ready')
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      element.classList.add('is-visible')
+      return undefined
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      element.classList.add('is-visible')
+      observer.unobserve(element)
+    }, { threshold: 0.12 })
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
+  return ref
+}
+
+function useMetricCounter(target, decimals = 0) {
+  const ref = useRef(null)
+  const [value, setValue] = useState(0)
+  useEffect(() => {
+    const element = ref.current
+    if (!element) return undefined
+    let timer
+    let started = false
+    const start = () => {
+      if (started) return
+      started = true
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        setValue(target)
+        return
+      }
+      const startTime = performance.now()
+      const tick = (now) => {
+        const progress = Math.min((now - startTime) / 850, 1)
+        const eased = 1 - Math.pow(1 - progress, 3)
+        setValue(target * eased)
+        if (progress < 1) timer = requestAnimationFrame(tick)
+      }
+      timer = requestAnimationFrame(tick)
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        start()
+        observer.disconnect()
+      }
+    }, { threshold: 0.35 })
+    observer.observe(element)
+    return () => {
+      observer.disconnect()
+      if (timer) cancelAnimationFrame(timer)
+    }
+  }, [target])
+  return [ref, value.toFixed(decimals)]
+}
+
+function MetricValue({ target, decimals = 0, suffix = '%' }) {
+  const [ref, value] = useMetricCounter(target, decimals)
+  return <strong ref={ref}>{value}{suffix}</strong>
+}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -55,7 +120,7 @@ const projects = [
     responsibilities: ['I designed the evaluation data model and FastAPI endpoints', 'I built an Agent Registry and comparison views for repeatable analysis', 'I tracked intermediate reasoning signals instead of only final labels'],
     role: 'Software Engineer Intern · AI Agent Evaluation',
     period: 'Feb 2026 — Jul 2026',
-    evidence: ['Architecture: workflow input → agent run → evaluator → structured audit record', 'Method: repeatable runs with process-level signals, final outcomes, and quality metrics', 'Access: Internal work — sanitised view'],
+    evidence: ['Architecture: workflow input → agent run → evaluator → structured audit record', 'Method: repeatable runs with process-level signals, final outcomes, and quality metrics', 'Access: Internal work. View is sanitised.'],
     architecture: ['Workflow input', 'Agent run', 'Evaluator', 'Audit record'],
     architectureNote: 'Confidential banking data and internal system names are omitted.',
     stack: 'Python · FastAPI · Next.js · SQLite · Google ADK · LiteLLM · Ollama',
@@ -68,7 +133,7 @@ const projects = [
     org: 'Deutsche Bank',
     year: '2026',
     title: 'I helped keep banking onboarding moving.',
-    summary: 'Production Java/Spring Boot APIs for commercial-banking onboarding — service-layer changes with SQL-backed validation and release-readiness owned end to end.',
+    summary: 'Production Java/Spring Boot APIs for commercial banking onboarding. I worked through service changes, SQL validation, and release checks from start to finish.',
     outcome: 'API-first',
     outcomeLabel: 'integration mindset',
     metricNote: 'Scope: production onboarding API changes and release-readiness checks.',
@@ -76,7 +141,7 @@ const projects = [
     responsibilities: ['I shipped onboarding API features and service-layer changes', 'I used SQL and logs to investigate workflow behaviour and defects', 'I owned release-readiness checks across unit tests, reviews, and CI/CD'],
     role: 'Associate Engineer · Commercial Banking Onboarding',
     period: 'Jul 2026 — Aug 2026',
-    evidence: ['Architecture: Java/Spring Boot REST services integrated with SQL-backed banking workflows', 'Method: SQL analysis, application logs, unit tests, code reviews, and CI/CD checks', 'Access: Internal work — sanitised view'],
+    evidence: ['Architecture: Java/Spring Boot REST services integrated with SQL-backed banking workflows', 'Method: SQL analysis, application logs, unit tests, code reviews, and CI/CD checks', 'Access: Internal work. View is sanitised.'],
     architecture: ['Client request', 'Spring Boot API', 'Validation + SQL', 'Release checks'],
     architectureNote: 'Internal workflow names and banking integrations are omitted.',
     stack: 'Java · Spring Boot · REST APIs · SQL · Jenkins · GitHub Actions',
@@ -97,7 +162,7 @@ const projects = [
     responsibilities: ['I delivered React and backend API features for corporate-bank users', 'I created Playwright coverage for core dashboard workflows', 'I added Allure reporting and CI feedback for faster verification'],
     role: 'Software Engineer Intern · Corporate Bank Liquidity Dashboard',
     period: 'Apr 2025 — Sep 2025',
-    evidence: ['Architecture: React dashboard → backend APIs → banking data views', 'Method: Playwright suites, Allure reporting, and CI/CD gates', 'Access: Internal work — sanitised view'],
+    evidence: ['Architecture: React dashboard → backend APIs → banking data views', 'Method: Playwright suites, Allure reporting, and CI/CD gates', 'Access: Internal work. View is sanitised.'],
     architecture: ['React dashboard', 'Backend APIs', 'Data views', 'Playwright + Allure'],
     architectureNote: 'User and banking data are represented as generic data views.',
     stack: 'React · API integration · Playwright · Allure · CI/CD',
@@ -114,7 +179,7 @@ const experience = [
     note: 'I own the entire IT function as the single point of accountability.',
     bullets: [
       'I lead software engineering across Java/Spring Boot, Python/FastAPI, React/TypeScript, and PostgreSQL/MySQL, with CI/CD throughout.',
-      'I own the whole IT picture — infrastructure, systems, website, data, security, and vendors.',
+      'I own the whole IT picture: infrastructure, systems, website, data, security, and vendors.',
       'I design microservices and APIs with unit + integration testing, Swagger/OpenAPI docs, and Agile stakeholder collaboration.',
       'I automate workflows with AI/LLM tooling where it genuinely removes toil.',
     ],
@@ -133,7 +198,7 @@ const experience = [
   {
     period: 'Feb 2026 — Jul 2026',
     company: 'Deutsche Bank',
-    title: 'Software Engineer Intern · Master’s Thesis — AI Agent Evaluation',
+    title: 'Software Engineer Intern · Master’s Thesis: AI Agent Evaluation',
     location: 'Berlin',
     bullets: [
       'I built process-aware LLM-agent evaluation tooling across 230+ evaluated runs, reaching 93.6% breach-detection accuracy.',
@@ -153,7 +218,7 @@ const experience = [
   {
     period: 'Jul 2023 — Aug 2024',
     company: 'Airtel Payments Bank',
-    title: 'Software Development Engineer · Assistant Manager — Technology',
+    title: 'Software Development Engineer · Assistant Manager: Technology',
     location: 'Gurgaon',
     bullets: [
       'I developed Spring Boot, SQL, and React Native digital-banking onboarding flows.',
@@ -176,7 +241,7 @@ const experience = [
 /*  Chatbot knowledge (rule-based, offline)                            */
 /* ------------------------------------------------------------------ */
 
-const chatWelcome = 'Hi, I’m the guide to this portfolio. Ask me about Anusha’s experience, projects, skills, or how to reach her — or tap a suggestion below.'
+const chatWelcome = 'Hi, I’m the guide to this portfolio. Ask about Anusha’s experience, projects, skills, or how to reach her. You can also use a suggestion below.'
 
 const chatSuggestions = [
   'What has Anusha built?',
@@ -188,17 +253,17 @@ const chatSuggestions = [
 
 const chatKnowledge = [
   { terms: ['hello', 'hi', 'hey', 'namaste', 'good morning', 'good afternoon', 'good evening'], reply: 'Hello! I can tell you about Anusha’s background, her projects, her skills, and how to get in touch. What would you like to know?' },
-  { terms: ['trans bc', 'freightways', 'current role', 'where does she work now', 'now', 'present', 'contractor'], reply: 'Anusha is currently a Senior Software Development Engineer (independent contractor) at Trans BC Freightways Ltd in Surrey, BC, where she owns the entire IT function — infrastructure, systems, website, data, security, and vendors — and builds across Java/Spring Boot, Python/FastAPI, React/TypeScript, and PostgreSQL/MySQL with CI/CD.' },
-  { terms: ['built', 'project', 'fieldnotes', 'rag', 'public project', 'research console', 'documents', 'what has she made'], reply: 'Her flagship personal project is Fieldnotes — a citation-first RAG research console (FastAPI + React/Vite) that ingests documents, retrieves passages with citations, and exports Markdown reports. It’s public on GitHub with automated tests and setup instructions. At Deutsche Bank she built an AI-agent evaluation platform reaching 93.6% breach-detection accuracy across 230+ runs, production Spring Boot onboarding APIs, and a liquidity dashboard with 95% Playwright regression coverage.' },
-  { terms: ['experience', 'worked', 'work history', 'career', 'job', 'banking work', 'bank', 'deutsche', 'airtel', 'citi', 'financial technology'], reply: 'Anusha has 2+ years across banking technology: Trans BC Freightways (current, Senior SDE owning all of IT), Deutsche Bank Berlin (Associate Engineer and two internships — AI agent evaluation, commercial banking onboarding, liquidity dashboard), Airtel Payments Bank (SDE, digital-banking onboarding), and Citi India (intern, commodities technology). Scroll to Experience for the full timeline.' },
-  { terms: ['skill', 'stack', 'tech', 'technology', 'language', 'strongest', 'tool', 'framework'], reply: 'Her core stack: Python, Java, JavaScript, TypeScript, SQL; FastAPI, Spring Boot, React, Next.js, REST APIs; AI systems — RAG, LLM evaluation, LangGraph, pgvector, Google ADK, LiteLLM, Ollama; delivery — pytest, Playwright, Jenkins, GitHub Actions, Agile/Scrum.' },
-  { terms: ['education', 'degree', 'university', 'study', 'studied', 'master', 'school', 'esmt', 'igdtuw', 'btech'], reply: 'She holds an M.Sc. in Analytics & AI from ESMT Berlin (2024–2026, grade 1.7 — roughly A− with distinction) and a B.Tech. in Electronics & Communication from IGDTUW, New Delhi (2019–2023, CGPA 7.95/10). She was also class representative and co-president of the Tech & Innovation Club at ESMT.' },
-  { terms: ['available', 'full-time', 'full time', 'hire', 'hiring', 'open', 'opportunity', 'vancouver', 'relocate', 'visa', 'work permit', 'resident', 'sponsorship'], reply: 'Yes — Anusha is a Canadian Permanent Resident based in Vancouver, BC, and is actively seeking a full-time permanent software engineering role in Vancouver. No sponsorship needed.' },
-  { terms: ['contact', 'email', 'reach', 'talk', 'call', 'phone', 'linkedin', 'github', 'resume', 'cv'], reply: 'You can reach her at dagaranusha@gmail.com — there’s a copy button and a contact form in the Contact section. She’s also on LinkedIn and GitHub, and her résumé is downloadable from the hero.' },
-  { terms: ['salary', 'pay', 'compensation', 'ctc'], reply: 'Compensation is best discussed directly with Anusha — drop her a line at dagaranusha@gmail.com.' },
-  { terms: ['thank', 'thanks', 'great', 'awesome', 'nice'], reply: 'You’re welcome! Anything else you’d like to know — her projects, her experience, or how to reach her?' },
-  { terms: ['who', 'about anusha', 'background', 'introduce', 'good fit', 'why hire', 'hire her'], reply: 'Anusha Dagar is an Applied AI & Software Engineer in Vancouver, BC. She builds reliable backend and applied-AI systems — from banking APIs and onboarding workflows to LLM-agent evaluation platforms. She’s known for making complex systems legible: tested, observable, and well documented.' },
-  { terms: ['where', 'location', 'based', 'live', 'in vancouver'], reply: 'Anusha is based in Vancouver, British Columbia, Canada — and open to full-time roles in the city.' },
+  { terms: ['trans bc', 'freightways', 'current role', 'where does she work now', 'now', 'present', 'contractor'], reply: 'Anusha is currently a Senior Software Development Engineer (independent contractor) at Trans BC Freightways Ltd in Surrey, BC. She owns the IT function and builds across Java/Spring Boot, Python/FastAPI, React/TypeScript, and PostgreSQL/MySQL with CI/CD.' },
+  { terms: ['built', 'project', 'fieldnotes', 'rag', 'public project', 'research console', 'documents', 'what has she made'], reply: 'Her flagship personal project is Fieldnotes, a citation-first RAG research console built with FastAPI and React/Vite. It ingests documents, returns cited passages, and exports Markdown reports. The repository is public and includes tests and setup instructions. At Deutsche Bank she built an AI-agent evaluation platform, onboarding APIs, and a liquidity dashboard with 95% Playwright regression coverage.' },
+  { terms: ['experience', 'worked', 'work history', 'career', 'job', 'banking work', 'bank', 'deutsche', 'airtel', 'citi', 'financial technology'], reply: 'Anusha has 2+ years across banking technology: Trans BC Freightways in Vancouver; Deutsche Bank in Berlin; Airtel Payments Bank; and Citi India. The Experience section has the full timeline.' },
+  { terms: ['skill', 'stack', 'tech', 'technology', 'language', 'strongest', 'tool', 'framework'], reply: 'Her core stack is Python, Java, JavaScript, TypeScript, SQL, FastAPI, Spring Boot, React, Next.js, REST APIs, RAG, LLM evaluation, LangGraph, pgvector, Google ADK, LiteLLM, Ollama, pytest, Playwright, Jenkins, and GitHub Actions.' },
+  { terms: ['education', 'degree', 'university', 'study', 'studied', 'master', 'school', 'esmt', 'igdtuw', 'btech'], reply: 'She holds an M.Sc. in Analytics & AI from ESMT Berlin (2024–2026, grade 1.7) and a B.Tech. in Electronics & Communication from IGDTUW, New Delhi (2019–2023, CGPA 7.95/10). She was also class representative and co-president of the Tech & Innovation Club.' },
+  { terms: ['available', 'full-time', 'full time', 'hire', 'hiring', 'open', 'opportunity', 'vancouver', 'relocate', 'visa', 'work permit', 'resident', 'sponsorship'], reply: 'Yes. Anusha is a Canadian Permanent Resident based in Vancouver, BC, and is looking for a full-time permanent software engineering role. No sponsorship is needed.' },
+  { terms: ['contact', 'email', 'reach', 'talk', 'call', 'phone', 'linkedin', 'github', 'resume', 'cv'], reply: 'You can reach her at dagaranusha@gmail.com. The Contact section has a copy button and a form. LinkedIn, GitHub, and her résumé are also linked on the page.' },
+  { terms: ['salary', 'pay', 'compensation', 'ctc'], reply: 'Compensation is best discussed directly with Anusha. Her email is dagaranusha@gmail.com.' },
+  { terms: ['thank', 'thanks', 'great', 'awesome', 'nice'], reply: 'You’re welcome. Anything else you’d like to know about her projects, experience, or how to reach her?' },
+  { terms: ['who', 'about anusha', 'background', 'introduce', 'good fit', 'why hire', 'hire her'], reply: 'Anusha Dagar is an Applied AI & Software Engineer in Vancouver, BC. She builds backend systems and AI evaluation tools for banking and other operational workflows. Her strength is making complicated systems easier to inspect and run.' },
+  { terms: ['where', 'location', 'based', 'live', 'in vancouver'], reply: 'Anusha is based in Vancouver, British Columbia, Canada, and is open to full-time roles in the city.' },
 ]
 
 const normaliseChatText = (text) => text.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, ' ').replace(/\s+/g, ' ').trim()
@@ -217,7 +282,7 @@ function chatReply(text) {
     if (score > bestScore) { best = entry; bestScore = score }
   }
   if (best) return best.reply
-  return 'Good question — the fullest answer lives on this page. Try the Work and Experience sections, or ask me about her projects, skills, education, availability, or how to contact her.'
+  return 'I don’t have that detail here. Try asking about her projects, experience, skills, education, availability, or contact details.'
 }
 
 /* ------------------------------------------------------------------ */
@@ -269,12 +334,34 @@ function ArchitectureMap() {
 }
 
 function ArchitectureFlow({ project }) {
+  const [activeStep, setActiveStep] = useState(0)
+  const sequenceRef = useRef(null)
+
+  const playSequence = () => {
+    window.clearInterval(sequenceRef.current)
+    let step = 0
+    setActiveStep(0)
+    sequenceRef.current = window.setInterval(() => {
+      step += 1
+      if (step >= project.architecture.length) {
+        window.clearInterval(sequenceRef.current)
+        return
+      }
+      setActiveStep(step)
+    }, 520)
+  }
+
+  useEffect(() => {
+    playSequence()
+    return () => window.clearInterval(sequenceRef.current)
+  }, [project.id])
+
   return (
     <div className="architecture-evidence">
       <div className="architecture-heading"><span>ARCHITECTURE</span><small>{project.architectureNote}</small></div>
-      <ol className="architecture-flow" aria-label={`${project.title} architecture flow`}>
+      <ol className="architecture-flow" aria-label={`${project.title} architecture flow`} onMouseEnter={playSequence}>
         {project.architecture.map((step, index) => (
-          <li key={step}><span>{String(index + 1).padStart(2, '0')}</span><strong>{step}</strong>{index < project.architecture.length - 1 && <ArrowUpRight size={15} aria-hidden="true" />}</li>
+          <li className={activeStep === index ? 'is-active' : ''} key={step}><span>{String(index + 1).padStart(2, '0')}</span><strong>{step}</strong>{index < project.architecture.length - 1 && <ArrowUpRight size={15} aria-hidden="true" />}</li>
         ))}
       </ol>
     </div>
@@ -287,6 +374,17 @@ function ArchitectureFlow({ project }) {
 
 function Topbar() {
   const [navOpen, setNavOpen] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window === 'undefined') return false
+    const stored = window.localStorage.getItem('anusha-theme')
+    return stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+  })
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = darkMode ? 'dark' : 'light'
+    window.localStorage.setItem('anusha-theme', darkMode ? 'dark' : 'light')
+  }, [darkMode])
+
   return (
     <header className="topbar">
       <a className="brand" href="#top" aria-label="Anusha Dagar home"><span className="brand-mark">AD</span><span>ANUSHA DAGAR</span></a>
@@ -300,28 +398,30 @@ function Topbar() {
         <a href="https://www.linkedin.com/in/anusha-dagar-82834619a/" target="_blank" rel="noreferrer" onClick={() => setNavOpen(false)}>LinkedIn</a>
         <a href="https://github.com/anushadagar1407" target="_blank" rel="noreferrer" onClick={() => setNavOpen(false)}>GitHub</a>
         <a className="nav-contact" href="#contact" onClick={() => setNavOpen(false)}>Let’s talk <ArrowUpRight size={15} /></a>
+        <button className="theme-toggle" type="button" onClick={() => setDarkMode((value) => !value)} aria-label={darkMode ? 'Switch to light theme' : 'Switch to dark theme'} title={darkMode ? 'Switch to light theme' : 'Switch to dark theme'}>{darkMode ? <Sun size={17} /> : <Moon size={17} />}</button>
       </nav>
     </header>
   )
 }
 
 function Hero({ onCopyEmail, copied }) {
+  const revealRef = useReveal()
   return (
-    <section className="hero section-pad">
+    <section ref={revealRef} className="hero section-pad">
       <div className="hero-copy">
         <div className="availability"><span className="live-dot" /> Vancouver, BC · Canadian Permanent Resident · open to full-time roles</div>
         <h1>Software engineer who makes complex systems legible.</h1>
-        <p className="hero-lede"><em>Software that earns trust.</em> I’m Anusha — I build reliable backend and applied-AI systems for high-stakes workflows, from banking APIs to LLM-agent evaluation.</p>
+        <p className="hero-lede"><em>Software that earns trust.</em> I’m Anusha. I build backend and applied-AI systems for operational workflows, from banking APIs to LLM-agent evaluation.</p>
         <div className="hero-actions">
           <a className="button button-primary" href="#work">Explore selected work <ArrowDown size={17} /></a>
           <a className="button button-quiet" href="/Anusha_Dagar_Resume.pdf" download>Download résumé <Download size={17} /></a>
           <button className="button button-quiet" onClick={onCopyEmail}>{copied ? <><Check size={15} /> Email copied</> : <>Copy my email <Copy size={15} /></>}</button>
         </div>
         <div className="hero-metrics" aria-label="Selected results">
-          <div><strong>93.6%</strong><span>loan-covenant breach detection<small>230+ evaluated agent runs</small></span></div>
-          <div><strong>95%</strong><span>automated test coverage<small>20 Playwright suites</small></span></div>
-          <div><strong>50% less</strong><span>manual QA effort<small>after regression automation</small></span></div>
-          <div><strong>20% shorter</strong><span>customer lead time<small>onboarding journey</small></span></div>
+          <div><MetricValue target={93.6} decimals={1} /><span>loan-covenant breach detection<small>230+ evaluated agent runs</small></span></div>
+          <div><MetricValue target={95} /><span>automated test coverage<small>20 Playwright suites</small></span></div>
+          <div><MetricValue target={50} suffix="% less" /><span>manual QA effort<small>after regression automation</small></span></div>
+          <div><MetricValue target={20} suffix="% shorter" /><span>customer lead time<small>onboarding journey</small></span></div>
         </div>
         <div className="hero-meta">
           <div><span>FOCUS</span><strong>Applied AI · Backend · Full-stack</strong></div>
@@ -335,8 +435,9 @@ function Hero({ onCopyEmail, copied }) {
 }
 
 function SignalBand() {
+  const revealRef = useReveal()
   return (
-    <section className="signal-band" aria-label="Career signal">
+    <section ref={revealRef} className="signal-band" aria-label="Career signal">
       <div><strong>01</strong><span>Applied AI systems</span></div>
       <div><strong>02</strong><span>Banking domain fluency</span></div>
       <div><strong>03</strong><span>Engineer who communicates</span></div>
@@ -382,12 +483,13 @@ function ProjectDetail({ project, onClose }) {
 
 function WorkSection() {
   const [openProject, setOpenProject] = useState(null)
+  const revealRef = useReveal()
   return (
-    <section id="work" className="work-section section-pad">
+    <section ref={revealRef} id="work" className="work-section section-pad">
       <div className="section-intro">
         <span className="section-index">01 / SELECTED WORK</span>
         <h2>What I have built.</h2>
-        <p>Four systems, four sets of constraints, each with measured results. Select any card for the full breakdown — contribution, evidence, and architecture.</p>
+        <p>Four systems. Different constraints, measurable results. Open a card for the contribution, evidence, and architecture.</p>
       </div>
       <div className="work-cards">
         {projects.map((project) => (
@@ -405,8 +507,9 @@ function WorkSection() {
 }
 
 function ApproachSection() {
+  const revealRef = useReveal()
   return (
-    <section id="approach" className="approach-section">
+    <section ref={revealRef} id="approach" className="approach-section">
       <div className="approach-aside">
         <span className="section-index">02 / HOW I WORK</span>
         <h2>Make the complex legible.</h2>
@@ -422,12 +525,13 @@ function ApproachSection() {
 }
 
 function ExperienceSection() {
+  const revealRef = useReveal()
   return (
-    <section id="experience" className="experience-section section-pad">
+    <section ref={revealRef} id="experience" className="experience-section section-pad">
       <div className="section-intro">
         <span className="section-index">03 / EXPERIENCE</span>
         <h2>Banking was my systems education.</h2>
-        <p>From commodities tech to payments to commercial banking — and now owning software end to end in Vancouver. These roles show the scope of work I took on and the problems I helped solve.</p>
+        <p>From commodities tech to payments to commercial banking, and now owning software end to end in Vancouver. These roles show the work I took on and the problems I helped solve.</p>
       </div>
       <div className="timeline">
         {experience.map((item) => (
@@ -447,12 +551,13 @@ function ExperienceSection() {
 }
 
 function AboutSection() {
+  const revealRef = useReveal()
   return (
-    <section id="background" className="about-section section-pad">
+    <section ref={revealRef} id="background" className="about-section section-pad">
       <div id="about" className="about-copy">
         <span className="section-index">04 / BACKGROUND</span>
         <h2>A little about me.</h2>
-        <p>From New Delhi to Berlin to Vancouver, I’ve spent 2+ years where software meets high-stakes workflows. I bring a technical foundation, a business-school lens, and a habit of writing things down clearly.</p>
+        <p>From New Delhi to Berlin to Vancouver, I’ve spent 2+ years building software for teams that need it to behave. I bring a technical foundation, a business-school lens, and a habit of writing things down clearly.</p>
         <ul className="about-points">
           <li>I ship AI systems with evidence: evaluations, audit trails, and quality metrics.</li>
           <li>I build backend APIs teams can operate: tested, observable, and ready for safe releases.</li>
@@ -482,8 +587,9 @@ function AboutSection() {
 }
 
 function ToolkitSection() {
+  const revealRef = useReveal()
   return (
-    <section className="toolkit-section section-pad">
+    <section ref={revealRef} className="toolkit-section section-pad">
       <div className="toolkit-heading">
         <span className="section-index">05 / TOOLKIT</span>
         <h2>My toolkit.</h2>
@@ -501,6 +607,7 @@ function ToolkitSection() {
 
 function ContactSection({ onCopyEmail, copied }) {
   const [formStatus, setFormStatus] = useState('')
+  const revealRef = useReveal()
 
   const openMailClient = (name, email, message) => {
     const subject = encodeURIComponent(`Portfolio enquiry from ${name}`)
@@ -530,7 +637,7 @@ function ContactSection({ onCopyEmail, copied }) {
   }
 
   return (
-    <section id="contact" className="contact-section section-pad">
+    <section ref={revealRef} id="contact" className="contact-section section-pad">
       <div>
         <span className="section-index">06 / CONTACT</span>
         <h2>Let’s work on a hard problem<br /><em>and make it clear.</em></h2>
@@ -553,8 +660,9 @@ function ContactSection({ onCopyEmail, copied }) {
 }
 
 function Footer() {
+  const revealRef = useReveal()
   return (
-    <footer className="footer">
+    <footer ref={revealRef} className="footer">
       <span>© 2026 Anusha Dagar</span>
       <span>Designed and built by me in Vancouver <MapPin size={14} /></span>
       <span className="footer-links"><a href="https://www.linkedin.com/in/anusha-dagar-82834619a/" target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={13} /></a><a href="https://github.com/anushadagar1407" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={13} /></a></span>

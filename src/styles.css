@@ -543,6 +543,7 @@ h3 { font-size: 1.8rem; }
 h1 { font-size: clamp(3.8rem, 5.6vw, 4.8rem); }
 .hero-actions { flex-wrap: nowrap; gap: 10px; }
 .button { padding-inline: 13px; white-space: nowrap; font-size: .84rem; }
+.button-quiet { background: transparent; }
 .hero-metrics span { min-height: 3.4em; display: flex; flex-direction: column; }
 .hero-metrics small { margin-top: auto; }
 .section-intro { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: start; }
@@ -580,4 +581,85 @@ h1 { font-size: clamp(3.8rem, 5.6vw, 4.8rem); }
   .chatbot { bottom: 22px; }
   .chat-fab { width: 54px; height: 54px; }
   .about-section, .toolkit-section, .contact-section { padding-top: 64px; padding-bottom: 70px; }
+}
+
+/* Motion, dark theme, and interaction polish */
+.reveal-ready { opacity: 0; transform: translateY(14px); transition: opacity 420ms ease-out, transform 420ms ease-out; }
+.reveal-ready.is-visible { opacity: 1; transform: none; }
+.reveal-ready.is-visible .work-card:nth-child(1) { transition-delay: 40ms; }
+.reveal-ready.is-visible .work-card:nth-child(2) { transition-delay: 90ms; }
+.reveal-ready.is-visible .work-card:nth-child(3) { transition-delay: 140ms; }
+.reveal-ready.is-visible .work-card:nth-child(4) { transition-delay: 190ms; }
+.reveal-ready .work-card { opacity: 0; transform: translateY(14px); transition: opacity 420ms ease-out, transform 420ms ease-out, box-shadow 220ms ease, background 220ms ease; }
+.reveal-ready.is-visible .work-card { opacity: 1; transform: none; }
+.reveal-ready.is-visible .work-card:hover { transform: translateY(-5px); }
+.architecture-flow li { transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, color 180ms ease; }
+.architecture-flow li.is-active { border-color: var(--aqua); background: color-mix(in srgb, var(--aqua) 13%, var(--ink-2)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--aqua) 18%, transparent); }
+.architecture-flow li.is-active strong { color: var(--paper); }
+.architecture-flow li.is-active > span { color: var(--aqua); }
+
+.theme-toggle { display: grid; place-items: center; width: 42px; height: 42px; padding: 0; color: var(--paper); border: 1px solid var(--line-strong); border-radius: 50%; background: transparent; cursor: pointer; }
+.theme-toggle:hover { color: var(--aqua); border-color: var(--aqua); }
+.footer-links { color: var(--muted); }
+
+:root[data-theme='dark'] {
+  --ink: #10191d;
+  --ink-2: #1a292f;
+  --ink-3: #25363c;
+  --paper: #f4efe4;
+  --muted: #afbfbd;
+  --faint: #809493;
+  --line: rgba(244, 239, 228, .16);
+  --line-strong: rgba(244, 239, 228, .3);
+  --coral: #f18b73;
+  --aqua: #70cdd0;
+  --lime: #c5d970;
+  --surface-coral: #382a2b;
+  --surface-aqua: #203a3d;
+  --surface-lime: #343b28;
+}
+
+:root[data-theme='dark'] body { background-image: radial-gradient(ellipse at 7% 2%, rgba(241, 139, 115, .1), transparent 31%), radial-gradient(ellipse at 94% 38%, rgba(112, 205, 208, .1), transparent 34%), repeating-radial-gradient(rgba(244, 239, 228, .018) 0 .7px, transparent .7px 3px); }
+:root[data-theme='dark'] .topbar { background: rgba(16, 25, 29, .9); }
+:root[data-theme='dark'] .map { background: rgba(26, 41, 47, .82); }
+:root[data-theme='dark'] .map-grid { opacity: .42; }
+:root[data-theme='dark'] .node { background: rgba(16, 25, 29, .9); border-color: var(--line-strong); }
+:root[data-theme='dark'] .node small, :root[data-theme='dark'] .signal-band span, :root[data-theme='dark'] .hero-lede, :root[data-theme='dark'] .section-intro p, :root[data-theme='dark'] .work-card p, :root[data-theme='dark'] .timeline-item p, :root[data-theme='dark'] .timeline-item ul, :root[data-theme='dark'] .about-copy > p, :root[data-theme='dark'] .principle p, :root[data-theme='dark'] .toolkit-lede, :root[data-theme='dark'] .contact-cta p { color: #c7d2cf; }
+:root[data-theme='dark'] .work-card.coral, :root[data-theme='dark'] .work-card:not(.aqua):not(.lime):not(.sky) { background: var(--surface-coral); }
+:root[data-theme='dark'] .work-card.aqua { background: var(--surface-aqua); }
+:root[data-theme='dark'] .work-card.lime { background: var(--surface-lime); }
+:root[data-theme='dark'] .work-card.sky { background: #273746; }
+:root[data-theme='dark'] .architecture-flow li { background: rgba(16, 25, 29, .7); border-color: var(--line-strong); }
+:root[data-theme='dark'] .project-detail-panel { background: var(--ink-2); }
+:root[data-theme='dark'] .chat-panel { background: var(--ink-2); }
+:root[data-theme='dark'] .chat-msg.bot p { background: rgba(16, 25, 29, .72); color: #d8e1de; }
+:root[data-theme='dark'] .chat-input { background: rgba(16, 25, 29, .68); }
+:root[data-theme='dark'] .chat-input input { background: #0d1519; }
+:root[data-theme='dark'] .contact-form input, :root[data-theme='dark'] .contact-form textarea { color: var(--paper); background: rgba(16, 25, 29, .35); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready, .reveal-ready .work-card { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .architecture-flow li { transition: none !important; }
+}
+
+@media print {
+  @page { margin: 14mm; }
+  html, body { background: #fff !important; color: #152329 !important; }
+  body { font-size: 10.5pt; line-height: 1.42; }
+  .topbar, .chatbot, .skip-link, .hero-actions, .copy-button, .contact-form, .panel-back, .panel-close { display: none !important; }
+  .site-shell, .section-pad, .footer { width: 100% !important; }
+  .hero { min-height: auto; display: block; padding: 0 0 18mm; }
+  .hero h1 { max-width: 170mm; font-size: 42pt; }
+  .hero-lede { max-width: 150mm; font-size: 14pt; }
+  .map { display: none; }
+  .signal-band { grid-template-columns: repeat(4, 1fr); padding: 0; background: #f2f1eb; }
+  .signal-band div { min-height: auto; padding: 10px; }
+  .work-section, .approach-section, .experience-section, .about-section, .toolkit-section, .contact-section { padding: 18mm 0; break-before: auto; }
+  .work-cards { grid-template-columns: repeat(2, 1fr); }
+  .work-card, .timeline-item, .background-row { break-inside: avoid; }
+  .work-card { min-height: auto; padding: 18px; background: #fff !important; border: 1px solid #c9d0cd; }
+  .work-card::before { display: none; }
+  .project-detail-panel { box-shadow: none; }
+  .footer { min-height: auto; padding-top: 12mm; }
+  a { color: inherit !important; }
 }
