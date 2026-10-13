@@ -103,29 +103,6 @@ const projects = [
     stack: 'React · API integration · Playwright · Allure · CI/CD',
     accent: 'lime',
   },
-  {
-    id: 'future-public-project',
-    number: '05',
-    type: 'Public project placeholder',
-    org: '[PLACEHOLDER]',
-    year: '[PLACEHOLDER]',
-    title: '[PLACEHOLDER] A future public project ready to add.',
-    summary: '[PLACEHOLDER] Add the user problem, your contribution, and a measurable outcome here.',
-    outcome: 'NEXT',
-    outcomeLabel: 'project slot to fill',
-    metricNote: '[PLACEHOLDER] Add one verified metric or outcome.',
-    details: ['[PLACEHOLDER] User or customer outcome', '[PLACEHOLDER] Scope and contribution', '[PLACEHOLDER] Evidence or launch detail'],
-    responsibilities: ['[PLACEHOLDER] What you designed or built', '[PLACEHOLDER] Key technical decision', '[PLACEHOLDER] Result, learning, or next step'],
-    role: '[PLACEHOLDER] Role / contribution',
-    period: '[PLACEHOLDER] Dates',
-    evidence: ['[PLACEHOLDER] Public proof link or release note', '[PLACEHOLDER] Method, test, or implementation detail', '[PLACEHOLDER] What a reviewer can verify'],
-    architecture: ['Problem', 'System', 'Evidence', 'Outcome'],
-    architectureNote: 'Placeholder architecture; replace every field when the public project is ready.',
-    stack: '[PLACEHOLDER] Stack / tools',
-    accent: 'aqua',
-    placeholder: true,
-    placeholderLinks: ['GitHub URL [PLACEHOLDER]', 'Live project URL [PLACEHOLDER]'],
-  },
 ]
 
 const experience = [
@@ -193,11 +170,6 @@ const experience = [
       'I reduced processing time by 15%.',
     ],
   },
-]
-
-const testimonials = [
-  { quote: '[PLACEHOLDER] Add a short quote about Anusha\'s engineering judgement, collaboration, or delivery.', name: '[PLACEHOLDER NAME]', role: '[PLACEHOLDER ROLE / COMPANY]' },
-  { quote: '[PLACEHOLDER] Add a second quote that shows how Anusha works with teams or stakeholders.', name: '[PLACEHOLDER NAME]', role: '[PLACEHOLDER ROLE / COMPANY]' },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -406,9 +378,6 @@ function ProjectDetail({ project, onClose }) {
             <span className="project-link-note">Run the demo locally using the repository README.</span>
           </div>
         )}
-        {project.placeholder && (
-          <div className="project-links placeholder-links"><span className="project-link-note">PLACEHOLDER LINKS TO ADD</span>{project.placeholderLinks.map((link) => <span className="project-proof-link placeholder-link" key={link}>{link} <ArrowUpRight size={15} /></span>)}</div>
-        )}
         <div className="stack-line"><span>STACK</span>{project.stack}</div>
         <button className="panel-back" onClick={onClose}><ArrowLeft size={15} /> Back to selected work</button>
       </article>
@@ -482,32 +451,11 @@ function ExperienceSection() {
   )
 }
 
-function TestimonialsSection() {
-  return (
-    <section id="testimonials" className="testimonials-section section-pad">
-      <div className="section-intro">
-        <span className="section-index">04 / TESTIMONIALS</span>
-        <h2>What collaborators might say.</h2>
-        <p>Two clearly marked placeholders for future recommendations from managers, peers, or partners.</p>
-      </div>
-      <div className="testimonial-grid">
-        {testimonials.map((testimonial, index) => (
-          <article className="testimonial-card" key={`testimonial-${index}`}>
-            <span className="testimonial-mark">&quot;</span>
-            <blockquote>{testimonial.quote}</blockquote>
-            <div className="testimonial-attribution"><strong>{testimonial.name}</strong><span>{testimonial.role}</span></div>
-          </article>
-        ))}
-      </div>
-    </section>
-  )
-}
-
 function AboutSection() {
   return (
     <section id="background" className="about-section section-pad">
       <div id="about" className="about-copy">
-        <span className="section-index">05 / BACKGROUND</span>
+        <span className="section-index">04 / BACKGROUND</span>
         <h2>A little about me.</h2>
         <p>From New Delhi to Berlin to Vancouver, I’ve spent 2+ years where software meets high-stakes workflows. I bring a technical foundation, a business-school lens, and a habit of writing things down clearly.</p>
         <ul className="about-points">
@@ -542,7 +490,7 @@ function ToolkitSection() {
   return (
     <section className="toolkit-section section-pad">
       <div className="toolkit-heading">
-        <span className="section-index">06 / TOOLKIT</span>
+        <span className="section-index">05 / TOOLKIT</span>
         <h2>My toolkit.</h2>
         <p className="toolkit-lede">The tools I have used across production banking, applied AI research, and day-to-day delivery.</p>
       </div>
@@ -589,7 +537,7 @@ function ContactSection({ onCopyEmail, copied }) {
   return (
     <section id="contact" className="contact-section section-pad">
       <div>
-        <span className="section-index">07 / CONTACT</span>
+        <span className="section-index">06 / CONTACT</span>
         <h2>Let’s work on a hard problem<br /><em>and make it clear.</em></h2>
       </div>
       <div className="contact-cta">
@@ -744,7 +692,6 @@ function App() {
         <WorkSection />
         <ApproachSection />
         <ExperienceSection />
-        <TestimonialsSection />
         <AboutSection />
         <ToolkitSection />
         <ContactSection onCopyEmail={copyEmail} copied={copied} />
